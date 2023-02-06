@@ -1,15 +1,17 @@
+import java.util.List;
+import java.util.ArrayList;
 
 public class Hand extends Letter{
     
     private int maxsize = 7;
-    private list<Letter> myLetter;
+    private List<Letter> myLetter;
     private int currSize;
 
     /*
     The default constructor should 
     create a hand of MAX_SIZE. 
     */
-    public hand(){
+    public void hand(){
         this.myLetter =  new ArrayList<Letter>();
         this.currSize = 0;
 
@@ -21,7 +23,7 @@ public class Hand extends Letter{
     should be created. If size is greater than 
     MAX_SIZE a hand of MAX_SIZE should be created.
     */
-    public hand(int size){
+    public void hand(int size){
         this.currSize = size;
         this.myLetter =  new ArrayList<Letter>();
         if( size < 0)
@@ -90,41 +92,41 @@ public class Hand extends Letter{
     }
 
     // not sure we need
-    public boolean canForm(string word){
-        if ( word == null)
-        {
-            throw new NullPointerException("Empty word");
-        }
-        if (word.size() > maxsize)
-        {
-            return false;
-        }
-        string myHand = this.toString();
-        bool found = false;
-        for (int i = 0; i < word.size(); i++)
-        {
-            for(int j = 0; j < myHand.size(); j++)
-            {
-                if(!found && word.at(i) == myHand.at(j))
-                {
-                    found = true;
-                    myHand.remove(j);
-                }
-            }
-            if (!found)
-            {
-                return false;
-            }
-            found = false;
-        }
-        return true;
-    }
+    // public boolean canForm(string word){
+    //     if ( word == null)
+    //     {
+    //         throw new NullPointerException("Empty word");
+    //     }
+    //     if (word.size() > maxsize)
+    //     {
+    //         return false;
+    //     }
+    //     string myHand = this.toString();
+    //     bool found = false;
+    //     for (int i = 0; i < word.size(); i++)
+    //     {
+    //         for(int j = 0; j < myHand.size(); j++)
+    //         {
+    //             if(!found && word.at(i) == myHand.at(j))
+    //             {
+    //                 found = true;
+    //                 myHand.remove(j);
+    //             }
+    //         }
+    //         if (!found)
+    //         {
+    //             return false;
+    //         }
+    //         found = false;
+    //     }
+    //     return true;
+    // }
 
     /* 
     Returns a string based on the Letters in hand 
     */
     public String toString(){
-        string myHand;
+        String myHand;
         for(int i = 0; i < currSize; i++)
         {
             myHand.add(myLetter.get(i).getLetter() );
