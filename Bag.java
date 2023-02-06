@@ -77,6 +77,12 @@ public class Bag {
         throw new IllegalArgumentException("Letter: " + letter + " is not in the bag");
     }
 
+    //Retrieves a random letter from the bag, removing it from the bag
+    public Letter getLetter(){
+        int letterIndex = (int)(Math.random() * (letters.size()));
+        return(letters.remove(letterIndex));
+    }
+
     //Adds a letter to the bag, the letter will be conjoined in one continuous stream
     //with the rest of the letters of the same value within the list.
     public String addLetter(Letter letter){
