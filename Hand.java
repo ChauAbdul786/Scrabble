@@ -126,10 +126,10 @@ public class Hand extends Letter{
     Returns a string based on the Letters in hand 
     */
     public String toString(){
-        String myHand;
+        String myHand = "";
         for(int i = 0; i < currSize; i++)
         {
-            myHand.add(myLetter.get(i).getLetter() );
+            myHand+=(myLetter.get(i).getLetter() );
         }
         return myHand;
 
