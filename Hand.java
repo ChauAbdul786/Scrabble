@@ -129,7 +129,7 @@ public class Hand extends Letter{
         String myHand;
         for(int i = 0; i < currSize; i++)
         {
-            myHand.add(myLetter.get(i).getLetter() );
+            myHand+=(myLetter.get(i).getLetter() );
         }
         return myHand;
 
