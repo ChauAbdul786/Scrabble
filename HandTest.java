@@ -3,9 +3,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests the Hand class.
- *
- * @author JMU Faculty
- * @version 01/25/2021
  */
 public class HandTest {
 
