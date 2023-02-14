@@ -3,6 +3,10 @@ public class Letter {
     private int points;
     
     // The constructor checks the validity of the arguments and throws an 'IllegalArgumentException' if either of them are invalid.
+    public Letter() {
+        this.letter = ' ';
+        this.points = 0;
+    }
     public Letter(char letter, int points) {
       if (!Character.isAlphabetic(letter) || !Character.isUpperCase(letter)) {
         throw new IllegalArgumentException("Invalid letter: " + letter);
