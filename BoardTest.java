@@ -23,6 +23,8 @@ public class BoardTest {
             { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
             { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 } };
 
+    // int[][] multipliers = { { 1, 2, 1 }, { 1, 2, 1 }, { 1, 2, 1 } };
+
     // tests constructor
     @Test
     public void testConstructor() {
@@ -259,5 +261,7 @@ public class BoardTest {
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.getLetterScore(2, 17);
         });
+
     }
+
 }
