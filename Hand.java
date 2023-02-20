@@ -1,20 +1,15 @@
-import java.util.List;
-import java.util.ArrayList;
-
 public class Hand extends Letter{
     
-    private int maxsize = 7;
-    private List<Letter> myLetter;
+    static final int MAX_SIZE = 8;
+    private Letter[] letters;
     private int currSize;
 
     /*
     The default constructor should 
     create a hand of MAX_SIZE. 
     */
-    public void hand(){
-        this.myLetter =  new ArrayList<Letter>();
-        this.currSize = 0;
-
+    public Hand(){
+        this(MAX_SIZE);
     }
 
     /*
@@ -23,21 +18,26 @@ public class Hand extends Letter{
     should be created. If size is greater than 
     MAX_SIZE a hand of MAX_SIZE should be created.
     */
-    public void hand(int size){
+    public Hand(int size){
+        if (size < 0) {
+            size = 0;
+        } else if (size > MAX_SIZE) {
+            size = MAX_SIZE;
+        }
         this.currSize = size;
-        this.myLetter =  new ArrayList<Letter>();
-        if( size < 0)
-        {
-            this.currSize = 0;
-        }
-        if (size > maxsize)
-        {
-            this.currSize = maxsize;
-        }
+        this.letters = new Letter[size];
     }
 
     public int getSize(){
         return currSize;
+    }
+
+    public Letter getLetter(int index) {
+        if(index >= 0 && index < letters.length) {
+            return letters[index];
+        } else {
+            return null;
+        }
     }
 
     /*
@@ -47,8 +47,8 @@ public class Hand extends Letter{
     does not remove a letter.
     */
     public int indexOf(char letter){
-        for (int i = 0; i < myLetter.size(); i++){
-            if (letter == myLetter.get(i).getLetter() ){
+        for (int i = 0; i < currSize; i++){
+            if (letters[i] != null && letters[i].getLetter() == letter) {
                 return i;
             }
         }
@@ -61,80 +61,72 @@ public class Hand extends Letter{
     If those conditions do not hold, 
     false should be returned. 
     */
-    public boolean insert(Letter letter){
-        if (currSize < maxsize)
-        {
-            myLetter.add(letter);
-            currSize++;
+    public boolean insert(Letter letter, int index) {
+        if (index < 0 || index >= currSize) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        if (letters[index] == null) {
+            letters[index] = letter;
             return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     /*
     returns the letter at index from the myLetter list
     */
-    public char retrieveLetter(int index){
-        return myLetter.get(index).getLetter();
-    }
+    // public char retrieveLetter(int index){
+    //     return myLetter.get(index).getLetter();
+    // }
 
     /*
     removes a Letter from the myLetter list at designated
     index. returns the removed letter.
     */
-    public Letter remove(int index){
-        Letter temp = myLetter.get(index);
-        myLetter.remove(index);
+    public Letter remove(int index) {
+        if (index < 0 || index >= currSize) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        Letter temp = letters[index];
+        letters[index] = null;
+        currSize--;
         return temp;
     }
 
-    // not sure we need
-    // public boolean canForm(string word){
-    //     if ( word == null)
-    //     {
-    //         throw new NullPointerException("Empty word");
-    //     }
-    //     if (word.size() > maxsize)
-    //     {
-    //         return false;
-    //     }
-    //     string myHand = this.toString();
-    //     bool found = false;
-    //     for (int i = 0; i < word.size(); i++)
-    //     {
-    //         for(int j = 0; j < myHand.size(); j++)
-    //         {
-    //             if(!found && word.at(i) == myHand.at(j))
-    //             {
-    //                 found = true;
-    //                 myHand.remove(j);
-    //             }
-    //         }
-    //         if (!found)
-    //         {
-    //             return false;
-    //         }
-    //         found = false;
-    //     }
-    //     return true;
-    // }
+    public boolean canForm(String word){
+        if (word == null) {
+            throw new NullPointerException("Empty word");
+        }
+        int[] count = new int[26];
+        for (Letter letter : letters) {
+            if (letter != null) {
+                count[letter.getLetter() - 'A']++;
+            }
+        }
+        for (char c : word.toCharArray()) {
+            if (count[c - 'A'] == 0) {
+                return false;
+            }
+            count[c - 'A']--;
+        }
+        return true;
+    }
 
     /* 
     Returns a string based on the Letters in hand 
     */
+    @Override
     public String toString(){
-        String myHand = "";
-        for(int i = 0; i < currSize; i++)
-        {
-            myHand+=(myLetter.get(i).getLetter() );
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < currSize; i++) {
+            sb.append(i).append(": ");
+            if (letters[i] != null) {
+                sb.append(letters[i].toString());
+            } else {
+                sb.append("-");
+            }
+            sb.append("\n");
         }
-        return myHand;
-
+        return sb.toString();
     }
-
-
-
 }
