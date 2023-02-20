@@ -8,7 +8,7 @@ public class Board {
 
     //initializes a 15 x 15 board and copies the multiplier array into the pointMult variable
     public Board(int multiplier[]) {
-        boardLength = multiplier.length;
+        boardLength = 15;
         board = new Letter[boardLength][boardLength];
         pointMult = new int[boardLength];
         System.arraycopy(multiplier, 0, pointMult, 0, multiplier.length);
@@ -35,7 +35,9 @@ public class Board {
         int score = 0;
         for (int i = 0; i < boardLength; i++) {
             for (int j = 0; j < boardLength; j++) {
+                if(board[i][j]!=null){
                 score = score + (board[i][j].getPoints() * pointMult[j]); //gets the points at every index and multiplies by the multiplier at the given column number
+                }
             }
         }
         return score;
@@ -56,6 +58,9 @@ public class Board {
     //Checks if a word will fit on the board
     public boolean fits(String word, int index1, int index2) {
         boolean doesFit = false;
+        if(index1 > boardLength || index2 >boardLength || index1 < 0 || index2 < 0){
+            throw new IndexOutOfBoundsException("Index not available.");
+        } 
         //if the word length is longer than the boardlength at a given index, immediately return
         if (word.length() + index1 > boardLength) {
             return false;
@@ -101,6 +106,7 @@ public class Board {
         return score;
     }
 
+    //Not sure that we need this
     @Override
     public String toString() {
         //
