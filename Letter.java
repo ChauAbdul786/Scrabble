@@ -8,7 +8,7 @@ public class Letter {
         this.points = 0;
     }
     public Letter(char letter, int points) {
-      if (!Character.isAlphabetic(letter) || !Character.isUpperCase(letter) || letter != '-') {
+      if (!(Character.isAlphabetic(letter) && Character.isUpperCase(letter)) || (letter != '-')) {
         throw new IllegalArgumentException("Invalid letter: " + letter);
       }
       if (points <= 0) {
