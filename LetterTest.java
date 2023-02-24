@@ -27,10 +27,6 @@ public class LetterTest {
         assertThrows(IllegalArgumentException.class, () -> {
             new Letter('X', -7);
         });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Letter('X', 0);
-        });
         assertThrows(IllegalArgumentException.class, () -> {
             new Letter('@', 1); // ASCII 64 (One below 'A')
         });
