@@ -102,8 +102,9 @@ public class Bag {
         int result = 0;
         for(int i = 0; i < letters.size(); i++){
             if(letters.get(i).getLetter() == letter){
-                while(letters.get(i).getLetter() == letter){
+                while(((i < letters.size()) && (letters.get(i).getLetter() == letter))){
                     result++;
+                    i++;
                 }
                 return result;
             }
@@ -137,7 +138,7 @@ public class Bag {
         for(int i = 0; i < 26; i++){
             int amountOfCurrLetter = findAmountOfLetter(letterToFind);
             if(amountOfCurrLetter > 0){
-                result += letterToFind + ": " + findAmountOfLetter(letterToFind) + "\n";
+                result += letterToFind + ": " + amountOfCurrLetter + "\n";
             }
             letterToFind++;
         }
