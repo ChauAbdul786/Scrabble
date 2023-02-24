@@ -7,7 +7,21 @@ import java.util.Scanner;
  */
 public class PlayScrabble {
 
-    public static final int[] MULTIPLIERS = {3, 1, 2, 1, 1, 2, 1, 3};
+    public static final int[][] MULTIPLIERS = { { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 },
+    { 1, 2, 1, 3, 1, 1, 1, 5, 1, 1, 1, 3, 1, 2, 1 } };
     public static final int HAND_SIZE = 7;
 
     /**
@@ -37,10 +51,14 @@ public class PlayScrabble {
 
             // get the user input
             System.out.printf(
-                    "Where would you like to move? (0-%d; %d quits)\n",
+                    "Which row would you like to move to? (0-%d; %d quits)\n",
                     MULTIPLIERS.length - 1, MULTIPLIERS.length);
-            int move = getMove(scanner);
-            if (move == MULTIPLIERS.length) {
+            int move1 = getMove(scanner);
+            System.out.printf(
+                "Which column would you like to move to? (0-%d; %d quits)\n",
+                MULTIPLIERS.length - 1, MULTIPLIERS.length);
+            int move2 = getMove(scanner);
+            if (move1 == MULTIPLIERS.length && move2 == MULTIPLIERS.length) {
                 done = true;
             } else {
                 System.out.println("What letter would you like to play?");
@@ -52,14 +70,14 @@ public class PlayScrabble {
                     System.out.println("That letter isn't in your hand!");
                 } else {
                     Letter letterToPlay = hand.remove(index);
-                    boolean success = board.play(letterToPlay, move);
+                    boolean success = board.play(letterToPlay, move1, move2);
                     if (!success) {
                         hand.insert(letterToPlay, index);
                         System.out.println("Illegal move. Try again.");
                     } else {
                         hand.remove(index);
                         System.out.println("Played " + letterToPlay
-                                + " at position " + move);
+                                + " at position " + move1 + ", " + move2);
                     }
                 }
                 System.out.println();
