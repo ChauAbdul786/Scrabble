@@ -1,11 +1,25 @@
 import java.lang.*;
 import java.util.Arrays;
+import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 
 public class Board {
     // Board is initialized as a double array of type letter
     private Letter[][] board;
     private int[][] pointMult;
     private int boardLength;
+    private tileDirection[] playedTiles = new tileDirection[7];
+    public int playedTilesIterator = -1;
+    private tileDirection[] checkWords = new tileDirection[20];
+    private int checkWordsIterator = -1;
+    private tileDirection[] foundWords = new tileDirection[20];
+    private int foundWordsIterator = -1;
+    private String[] formedWords = new String[20];
+    private int formedWordsIterator = -1;
+    private ArrayList<String>[] Dictionary;
 
     // initializes a 15 x 15 board and copies the multiplier array into the
     // pointMult variable
@@ -13,7 +27,23 @@ public class Board {
         boardLength = 15;
         board = new Letter[boardLength][boardLength];
         pointMult = new int[boardLength][boardLength];
+        Dictionary = new ArrayList[26];
+        for (int i = 0; i < 26; i++) {
+            Dictionary[i] = new ArrayList<String>();
+        }
         pointMult = Arrays.stream(multiplier).map(int[]::clone).toArray(int[][]::new);
+        try {
+            File myObj = new File("Dictionary.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+              String data = myReader.nextLine();
+              Dictionary[data.charAt(0) - 'A'].add(data);
+            }
+            myReader.close();
+          } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
         // System.arraycopy(multiplier, 0, pointMult, 0, multiplier.length);
     }
 
@@ -55,15 +85,194 @@ public class Board {
     // if there is not AND sets the letter at the given index
     public boolean play(Letter letter, int index1, int index2) {
         try {
-            if (board[index1][index2] != null)
+            if (board[index1][index2] != null) {
+            	playedTilesIterator = -1;
                 return false;
+            }
             board[index1][index2] = letter;
         } catch (Exception e) {
             throw new IndexOutOfBoundsException("Index not available. " + e);
         }
+        playedTilesIterator++;
+        tileDirection temp = new tileDirection(index1,index2, Direction.none);
+        playedTiles[playedTilesIterator] = temp;
         return true;
     }
+    
+    // finds all the words that a turn has created.
+    // checks if each of those words are valid
+    public boolean checkWords(){
+    	findAffected();
+    	findWords();
+    	
+    	playedTilesIterator = -1;
+    	checkWordsIterator = -1;
+    	
+    	if(ValidateWords()){
+    		formedWordsIterator = -1;
+    		return true;
+    	}
+		formedWordsIterator = -1;
+    	return false;
+    }
+    
+    //finds all indexes which are affected by the played tiles
+    
+    //finds tiles that are affected by the played tiles and 
+    //finds the words attached to ensure the new words are valid.
+    private void findAffected(){
+    	for (int i = playedTilesIterator; i != -1; i--){
+    		checkAround(playedTiles[playedTilesIterator]);
+    	}
+    	playedTilesIterator = -1;
+    }
+    
+    // checks around the tile to see if there is another tile that
+    // has not been played this turn
+    
+    //checks the spaces around the index of the tile given
+    private void checkAround(tileDirection myTile){
+    	int row = myTile.getX();
+    	int column = myTile.getY();
+    	if(column-1 != -1) {
+    		if(board[row][column-1] != null && !inArray(row,column-1)){
+    			tileDirection temp = new tileDirection(row,column-1, Direction.left);
+    			checkWordsIterator++;
+    			checkWords[checkWordsIterator] = temp;
+    		}
+    		else if(column + 1 !=15) {
+    			if(board[row][column+1] != null && !inArray(row,column+1)){
+    				tileDirection temp = new tileDirection(row,column+1, Direction.right);
+        			foundWordsIterator++;
+        			foundWords[checkWordsIterator] = temp;
+    			}
+    		}
+    	}
+    	if(row-1 != -1) {
+    		if(board[row-1][column] != null && !inArray(row-1,column)){
+    			tileDirection temp = new tileDirection(row-1,column-1, Direction.up);
+    			checkWordsIterator++;
+    			checkWords[checkWordsIterator] = temp;
+    		}
+    		else if(row + 1 !=15) {
+    			if(board[row+1][column] != null && !inArray(row+1,column)){
+    				tileDirection temp = new tileDirection(row+1,column, Direction.down);
+        			foundWordsIterator++;
+        			foundWords[checkWordsIterator] = temp;
+    			}
+    		}
+    	}
+    	
+    }
+    
+    //checks if the two index are in the array of played tiles.
+    
+    //Checks if the index tile is in the array of played tiles
+    private boolean inArray(int row, int column){
+    	for (int i = 0; i <= playedTilesIterator; i++) {
+    		if(row == playedTiles[i].getX() && column == playedTiles[i].getY())
+    				return true;
+    	}
+    	return false;
+    }
+    
+    //finds the start of a word to be added to an array and the direction to go from there.
 
+    //Finds the first letter of the affected words and then adds the
+    //word it makes to the formedWords array
+    private void findWords() {
+    	tileDirection myTile;
+    	int row, column, myLetters;
+    	myLetters = checkWordsIterator;
+    	while(myLetters != -1) {
+    		myTile = checkWords[myLetters];
+    		row = myTile.getX();
+    		column = myTile.getY();
+    		if(myTile.getDirection() == Direction.left ) {
+    			while (board[row][column] != null) {
+    				column --;
+    				if(column == -1)
+    				{
+    					break;
+    				}
+    			}
+    			foundWordsIterator++;
+    			myTile = new tileDirection(row,column,Direction.right);
+    			foundWords[myLetters] = myTile;
+    		}
+    		else if(myTile.getDirection() == Direction.up ) {
+    			while (board[row][column] != null) {
+    				row --;
+    				if(row == -1)
+    				{
+    					break;
+    				}
+    			}
+    			foundWordsIterator++;
+    			myTile = new tileDirection(row,column,Direction.down);
+    			foundWords[myLetters] = myTile;
+    		}
+    		myLetters --;
+    	}
+    	formWord();
+    }
+    
+    // Uses the start of each word and forms a word to be placed in an array
+    
+    //Forms words from the first letter of the word.
+    private void formWord() {
+    	int myLetters, row , column;
+    	tileDirection temp;
+    	myLetters = foundWordsIterator;
+    	while (myLetters != -1){
+        	String myString = "";
+    		temp = foundWords[myLetters];
+    		row = temp.getX();
+    		column = temp.getY();
+    		if(temp.getDirection() == Direction.down) {
+    			while(board[row][column] != null){
+    				myString = myString + board[row][column].getLetter();
+    				row++;
+    				if(row == 15){
+    					break;
+    				}
+    			}
+    		}
+    		else if(temp.getDirection() == Direction.right) {
+    			while(board[row][column] != null){
+    				myString = myString + board[row][column].getLetter();
+    				column++;
+    				if(column == 15){
+    					break;
+    				}
+    			}
+    		}
+    		formedWords[formedWordsIterator] = myString;
+    		formedWordsIterator++;
+    		myLetters--;
+    	}
+    	
+    }
+    
+    //Checks to see if all the formed words are valid.
+    private boolean ValidateWords(){
+    	for(int i = 0; i < formedWordsIterator; i++) {
+    		boolean isFound = false;
+    		String myWord = formedWords[i];
+    		int hashNum = (myWord.charAt(0)- 'A');
+    		for(int j = 0; j <Dictionary[hashNum].size();j++) {
+    			if(myWord == Dictionary[hashNum].get(j)) {
+    				isFound=true;
+    				break;
+    			}
+    		}
+    		if(!isFound) {
+    			return false;
+    		}
+    		
+    	}
+    	return true;
+    }
     // Checks if a word will fit on the board
     public boolean fits(String word, int index1, int index2) {
         boolean doesFit = false;
