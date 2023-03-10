@@ -12,14 +12,18 @@ public class Board {
     private int[][] pointMult;
     private int boardLength;
     private tileDirection[] playedTiles = new tileDirection[7];
-    public int playedTilesIterator = -1;
+    private int playedTilesIterator = -1;
     private tileDirection[] checkWords = new tileDirection[20];
     private int checkWordsIterator = -1;
     private tileDirection[] foundWords = new tileDirection[20];
     private int foundWordsIterator = -1;
     private String[] formedWords = new String[20];
     private int formedWordsIterator = -1;
-    private ArrayList<String>[] Dictionary;
+    public ArrayList<String>[] Dictionary;
+    private boolean horizontal;
+    private boolean vertical;
+    private int lowestTile;
+    private int highestTile;
 
     // initializes a 15 x 15 board and copies the multiplier array into the
     // pointMult variable
@@ -102,18 +106,51 @@ public class Board {
     // finds all the words that a turn has created.
     // checks if each of those words are valid
     public boolean checkWords(){
-    	findAffected();
-    	findWords();
-    	
-    	playedTilesIterator = -1;
-    	checkWordsIterator = -1;
-    	
-    	if(ValidateWords()){
-    		formedWordsIterator = -1;
-    		return true;
+    	if(isLegal()) {
+    		findAffected();
+    		findWords();
+    		if(ValidateWords()){
+    			resetIterators();
+    			return true;
+    		}
     	}
-		formedWordsIterator = -1;
+    	resetIterators();
     	return false;
+    }
+    
+    
+    //checks to see if the tiles played are on the same horizontal axis or
+    // same vertical axis then ensures that all tiles between are filled
+    private boolean isLegal() {
+    	if(playedTilesIterator >= 1){
+    		horizontal = true;
+    		vertical = true;
+    		int myX = playedTiles[0].getX();
+    		int myY = playedTiles[0].getY();
+    		
+    		for(int i = 0; i <= playedTilesIterator; i++) {
+    			if(playedTiles[i].getX() != myX) {
+    				horizontal = false;
+    			}
+    			if(playedTiles[i].getY() != myY) {
+    				vertical = false;
+    			}
+    		}
+    		
+    		if(!horizontal && !vertical) {return false;}
+    		
+    		getRange();
+    		
+    		for(int j = lowestTile; j < highestTile; j++) {
+    			if(horizontal) {
+    				if(board[myX][j] == null) {return false;}
+    			}
+    			else if(vertical) {
+    				if(board[j][myY] == null) {return false;}
+    			}
+    		}
+    	}
+    	return (horizontal || vertical);
     }
     
     //finds all indexes which are affected by the played tiles
@@ -121,10 +158,9 @@ public class Board {
     //finds tiles that are affected by the played tiles and 
     //finds the words attached to ensure the new words are valid.
     private void findAffected(){
-    	for (int i = playedTilesIterator; i != -1; i--){
-    		checkAround(playedTiles[playedTilesIterator]);
+    	for (int i = 0; i <= playedTilesIterator; i++){
+    		checkAround(playedTiles[i]);
     	}
-    	playedTilesIterator = -1;
     }
     
     // checks around the tile to see if there is another tile that
@@ -134,48 +170,128 @@ public class Board {
     private void checkAround(tileDirection myTile){
     	int row = myTile.getX();
     	int column = myTile.getY();
-    	if(column-1 != -1) {
-    		if(board[row][column-1] != null && !inArray(row,column-1)){
-    			tileDirection temp = new tileDirection(row,column-1, Direction.left);
-    			checkWordsIterator++;
-    			checkWords[checkWordsIterator] = temp;
-    		}
-    		else if(column + 1 !=15) {
-    			if(board[row][column+1] != null && !inArray(row,column+1)){
-    				tileDirection temp = new tileDirection(row,column+1, Direction.right);
-        			foundWordsIterator++;
-        			foundWords[checkWordsIterator] = temp;
-    			}
-    		}
-    	}
-    	if(row-1 != -1) {
-    		if(board[row-1][column] != null && !inArray(row-1,column)){
-    			tileDirection temp = new tileDirection(row-1,column-1, Direction.up);
-    			checkWordsIterator++;
-    			checkWords[checkWordsIterator] = temp;
-    		}
-    		else if(row + 1 !=15) {
-    			if(board[row+1][column] != null && !inArray(row+1,column)){
-    				tileDirection temp = new tileDirection(row+1,column, Direction.down);
-        			foundWordsIterator++;
-        			foundWords[checkWordsIterator] = temp;
-    			}
-    		}
-    	}
+    	tileDirection temp;
     	
-    }
-    
-    //checks if the two index are in the array of played tiles.
-    
-    //Checks if the index tile is in the array of played tiles
-    private boolean inArray(int row, int column){
-    	for (int i = 0; i <= playedTilesIterator; i++) {
-    		if(row == playedTiles[i].getX() && column == playedTiles[i].getY())
-    				return true;
+    	if(horizontal) {
+    		if(column == lowestTile) {
+    			// takes care of the left side
+    			if( (column - 1) != -1) {
+    				if(board[row][column -1] != null) {
+    					temp = new tileDirection(row,column-1, Direction.left);
+    					checkWordsIterator++;
+    					checkWords[checkWordsIterator] = temp;
+    				}
+    				else {
+    					temp = new tileDirection(row,column, Direction.right);
+            			foundWordsIterator++;
+            			foundWords[foundWordsIterator] = temp;
+    				}
+    			}
+    			else {
+    				temp = new tileDirection(row,column, Direction.right);
+        			foundWordsIterator++;
+        			foundWords[foundWordsIterator] = temp;
+    			}
+    		}
+    		// takes care of all rows except the top
+    		if (row - 1 != -1) {
+    			if(board[row-1][column] != null) {
+    				temp = new tileDirection(row-1,column, Direction.up);
+        			checkWordsIterator++;
+        			checkWords[checkWordsIterator] = temp;
+    			}
+    			else if (row + 1 != 15) {
+    				if(board[row+1][column] != null) {
+        				temp = new tileDirection(row+1,column, Direction.down);
+        				foundWordsIterator++;
+            			foundWords[foundWordsIterator] = temp;
+        			}
+    			}
+    		}
+    		// takes care of the top row
+    		else {
+				if(board[row+1][column] != null) {
+    				temp = new tileDirection(row,column, Direction.down);
+    				foundWordsIterator++;
+        			foundWords[foundWordsIterator] = temp;
+    			}
+    		}
     	}
-    	return false;
+    	if(vertical) {
+    		if(row == lowestTile) {
+    			// takes care of the top side
+    			if(row - 1 != -1) {
+    				if(board[row - 1][column] != null) {
+    					temp = new tileDirection(row -1,column, Direction.up);
+    					checkWordsIterator++;
+    					checkWords[checkWordsIterator] = temp;
+    				}
+    				else {
+    					temp = new tileDirection(row,column, Direction.down);
+            			foundWordsIterator++;
+            			foundWords[foundWordsIterator] = temp;
+    				}
+    			}
+    			else {
+					temp = new tileDirection(row,column, Direction.down);
+        			foundWordsIterator++;
+        			foundWords[foundWordsIterator] = temp;
+				}
+    		}
+    		// takes care of all column except the left
+    		if (column - 1 != -1) {
+    			if(board[row][column-1] != null) {
+    				temp = new tileDirection(row-1,column, Direction.left);
+        			checkWordsIterator++;
+        			checkWords[checkWordsIterator] = temp;
+    			}
+    			else if (column + 1 != 15) {
+    				if(board[row][column + 1] != null) {
+        				temp = new tileDirection(row+1,column, Direction.right);
+        				foundWordsIterator++;
+            			foundWords[foundWordsIterator] = temp;
+        			}
+    			}
+    		}
+    		// takes care of the left column
+    		else {
+				if(board[row][column + 1] != null) {
+    				temp = new tileDirection(row,column, Direction.right);
+    				foundWordsIterator++;
+        			foundWords[foundWordsIterator] = temp;
+    			}
+    		}
+    	}
     }
     
+    //gets the range of the tiles from the lowest index to highest
+    // used to check every tile in between to ensure it is continuous
+    // from the lowest index to the highest index
+    private void getRange() {
+    	lowestTile = 15;
+    	highestTile = -1;
+    	if(playedTilesIterator >= 0) {
+    		for(int i = 0; i <= playedTilesIterator; i++) {
+    			if(horizontal) {
+    				if(playedTiles[i].getY() > highestTile) {
+    					highestTile = playedTiles[i].getY();
+    				}
+    				if(playedTiles[i].getY() < lowestTile) {
+    					lowestTile = playedTiles[i].getY();
+    				}
+    			}
+    			else if(vertical) {
+    				if(playedTiles[i].getX() > highestTile) {
+    					highestTile = playedTiles[i].getX();
+    				}
+    				if(playedTiles[i].getX() < lowestTile) {
+    					lowestTile = playedTiles[i].getX();
+    				}
+    			}
+    		}
+    	}
+    }
+
     //finds the start of a word to be added to an array and the direction to go from there.
 
     //Finds the first letter of the affected words and then adds the
@@ -197,7 +313,7 @@ public class Board {
     				}
     			}
     			foundWordsIterator++;
-    			myTile = new tileDirection(row,column,Direction.right);
+    			myTile = new tileDirection(row,column + 1,Direction.right);
     			foundWords[myLetters] = myTile;
     		}
     		else if(myTile.getDirection() == Direction.up ) {
@@ -209,7 +325,7 @@ public class Board {
     				}
     			}
     			foundWordsIterator++;
-    			myTile = new tileDirection(row,column,Direction.down);
+    			myTile = new tileDirection(row+1,column,Direction.down);
     			foundWords[myLetters] = myTile;
     		}
     		myLetters --;
@@ -247,8 +363,8 @@ public class Board {
     				}
     			}
     		}
-    		formedWords[formedWordsIterator] = myString;
     		formedWordsIterator++;
+    		formedWords[formedWordsIterator] = myString;
     		myLetters--;
     	}
     	
@@ -256,12 +372,12 @@ public class Board {
     
     //Checks to see if all the formed words are valid.
     private boolean ValidateWords(){
-    	for(int i = 0; i < formedWordsIterator; i++) {
+    	for(int i = 0; i <= formedWordsIterator; i++) {
     		boolean isFound = false;
     		String myWord = formedWords[i];
     		int hashNum = (myWord.charAt(0)- 'A');
     		for(int j = 0; j <Dictionary[hashNum].size();j++) {
-    			if(myWord == Dictionary[hashNum].get(j)) {
+    			if(myWord.equals(Dictionary[hashNum].get(j))) {
     				isFound=true;
     				break;
     			}
@@ -273,6 +389,16 @@ public class Board {
     	}
     	return true;
     }
+    
+    //resets all iterators
+    private void resetIterators() {
+    	playedTilesIterator = -1;
+    	checkWordsIterator = -1;
+    	foundWordsIterator = -1;
+		formedWordsIterator = -1;
+    }
+    
+    
     // Checks if a word will fit on the board
     public boolean fits(String word, int index1, int index2) {
         boolean doesFit = false;
@@ -327,7 +453,41 @@ public class Board {
         return score;
     }
 
-    // Not sure that we need this
+    //Accessors for various private attributes
+    public int getPlayedTilesX(int i){
+        return playedTiles[i].getX();
+    }
+    public int getPlayedTilesY(int i){
+        return playedTiles[i].getY();
+    }
+
+    public tileDirection[] getCheckWords(){
+        return checkWords;
+    }
+
+    public tileDirection[] getFoundWords(){
+        return foundWords;
+    }
+    public int getPlayedIterator(){
+        return playedTilesIterator;
+    }
+
+    public int getCheckIterator(){
+        return checkWordsIterator;
+    }
+
+    public int getFoundIterator(){
+        return foundWordsIterator;
+    }
+
+    public String[] getFormedWords(){
+        return formedWords;
+    }
+    
+    public int getFormedWordsIterator(){
+        return formedWordsIterator;
+    }
+    //Converts the Board into a string
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
