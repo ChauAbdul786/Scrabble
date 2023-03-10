@@ -33,6 +33,9 @@ public class PlayScrabble {
         System.out.println("*** Welcome To Simple Scrabble ***");
         System.out.println();
 
+        PlayScrabbleView gui = new PlayScrabbleView();
+        gui.startGUI();
+
         Scanner scanner = new Scanner(System.in);
 
         Board board = new Board(MULTIPLIERS);
