@@ -11,6 +11,7 @@ public class Board {
     private Letter[][] board;
     private int[][] pointMult;
     private int boardLength;
+    private Letter[] myTiles = new Letter[7];
     private tileDirection[] playedTiles = new tileDirection[7];
     private int playedTilesIterator = -1;
     private tileDirection[] checkWords = new tileDirection[20];
@@ -20,10 +21,15 @@ public class Board {
     private String[] formedWords = new String[20];
     private int formedWordsIterator = -1;
     public ArrayList<String>[] Dictionary;
+
+    private intPairs[] triple = new intPairs[8];
+    private intPairs[] doubles = new intPairs[17];
+
     private boolean horizontal;
     private boolean vertical;
     private int lowestTile;
     private int highestTile;
+
 
 
     // initializes a 15 x 15 board and copies the multiplier array into the
@@ -33,6 +39,49 @@ public class Board {
         board = new Letter[boardLength][boardLength];
         pointMult = new int[boardLength][boardLength];
         Dictionary = new ArrayList[26];
+        triple[0] = new intPairs(0,0);
+        triple[1] = new intPairs(0,7);
+        triple[2] = new intPairs(0,14);
+        triple[3] = new intPairs(7,0);
+        triple[4] = new intPairs(7,14);
+        triple[5] = new intPairs(14,0);
+        triple[6] = new intPairs(14,7);
+        triple[7] = new intPairs(14,14);
+        int a = 1, b= 1;
+        for(int k = 0; k < 17; k++) {
+        	if(k < 4) {
+        		doubles[k] = new intPairs(a,b);
+        		a++;
+        		b++;
+        	}
+        	else if(k >= 4 && k < 8) {
+        		if(k ==4) {
+        			a = 1;
+        			b = 13;
+        		}
+        		doubles[k] = new intPairs(a,b);
+        		a++;
+        		b--;
+        	}
+        	else if(k >= 8 && k < 12) {
+        		if(k == 8) {
+        			a = 10;
+        			b = 4;
+        		}
+        		doubles[k] = new intPairs(a,b);
+        		a++;
+        		b--;
+        		
+        	}
+        	else if(k >= 12 && k < 16){
+        		if(k == 12) {
+        			a = 10;
+        		}
+        		doubles[k] = new intPairs(a,a);
+        		a++;
+        	}
+        	else if(k == 16) {doubles[k] = new intPairs(7,7);}
+        }
         for (int i = 0; i < 26; i++) {
             Dictionary[i] = new ArrayList<String>();
         }
@@ -88,11 +137,15 @@ public class Board {
 
     // Checks if there is a letter at a given index. Returns false if there is, true
     // if there is not AND sets the letter at the given index
-    public boolean play(Letter letter, int index1, int index2) {
+    public boolean play(Letter letter, int index1, int index2, Scanner scanner) {
         try {
             if (board[index1][index2] != null) {
-            	playedTilesIterator = -1;
                 return false;
+            }
+            if(letter.getPoints() == 0) {
+            	System.out.println("What letter do you want to place");
+            	char myLetter = scanner.nextLine().charAt(0);
+                letter = new Letter(Character.toUpperCase(myLetter),0);
             }
             board[index1][index2] = letter;
         } catch (Exception e) {
@@ -101,20 +154,26 @@ public class Board {
         playedTilesIterator++;
         tileDirection temp = new tileDirection(index1,index2, Direction.none);
         playedTiles[playedTilesIterator] = temp;
+        myTiles[playedTilesIterator] = letter;
         return true;
     }
     
     // finds all the words that a turn has created.
     // checks if each of those words are valid
-    public boolean checkWords(){
+
+    public boolean checkWords(Hand myHand){
+
+
     	if(isLegal()) {
     		findAffected();
     		findWords();
     		if(ValidateWords()){
-    			resetIterators();
+
     			return true;
     		}
     	}
+    	returnTiles(myHand);
+
     	resetIterators();
     	return false;
     }
@@ -396,14 +455,123 @@ public class Board {
     	return true;
     }
     
+
+    //calculates the score for the turn
+    public int calculateScore() {
+    	int score = 0;
+    	int wordScore = 0;
+    	int scoreMulti = 1;
+    	int myLetters, row =0 , column= 0;
+    	int k;
+    	boolean inArray = false;
+    	tileDirection temp;
+    	myLetters = foundWordsIterator;
+    	while (myLetters != -1){
+    		temp = foundWords[myLetters];
+    		wordScore = 0;
+    		scoreMulti = 1;
+    		row = temp.getX();
+    		column = temp.getY();
+    		if(temp.getDirection() == Direction.down) {
+    			while(board[row][column] != null){
+    				inArray = false;
+    				for(int i = 0; i < playedTilesIterator;i++) {
+    					if(playedTiles[i].getX() == row && playedTiles[i].getY() == column) {
+    						inArray = true;
+    						wordScore = wordScore + (board[row][column].getPoints() * pointMult[row][column]);
+    						k = 0;
+    						while(k <17) {
+    							if(k<8) {
+    								if(triple[k].getX() == row && triple[k].getY() == column) {
+    									scoreMulti = 3;
+    								}
+    							}
+    							if(doubles[k].getX() == row && doubles[k].getY() == column) {
+    									scoreMulti = 2;
+    								}
+    							k++;
+    						}
+    						break;
+    					}
+    				}
+    				if(!inArray) {
+    					wordScore = wordScore + board[row][column].getPoints();
+    				}
+    				row++;
+    				if(row == 15){
+    					break;
+    				}
+    			}
+				wordScore = wordScore * scoreMulti;
+    		}
+    		else if(temp.getDirection() == Direction.right) {
+    			while(board[row][column] != null){
+    				inArray = false;
+    				for(int i = 0; i < playedTilesIterator;i++) {
+    					if(playedTiles[i].getX() == row && playedTiles[i].getY() == column) {
+    						inArray = true;
+    						wordScore = wordScore + (board[row][column].getPoints() * pointMult[row][column]);
+    						k = 0;
+    						while(k <17) {
+    							if(k<8) {
+    								if(triple[k].getX() == row && triple[k].getY() == column) {
+    									scoreMulti = 3;
+    								}
+    							}
+    							if(doubles[k].getX() == row && doubles[k].getY() == column) {
+    									scoreMulti = 2;
+    								}
+    							k++;
+    						}
+    						break;
+    					}
+    				}
+    				if(!inArray) {
+    					wordScore = wordScore + board[row][column].getPoints();
+    				}
+    				column++;
+    				if(column == 15){
+    					break;
+    				}
+    			}
+				wordScore = wordScore * scoreMulti;
+    		}
+    		score = score + wordScore;
+    		myLetters--;
+    	}
+    	
+    	return score;
+    }
+    
     //resets all iterators
-    private void resetIterators() {
+    public void resetIterators() {
+
+
+
     	playedTilesIterator = -1;
     	checkWordsIterator = -1;
     	foundWordsIterator = -1;
 		formedWordsIterator = -1;
     }
     
+
+    public void returnTiles(Hand myHand) {
+    	int x,y;
+    	for(int i = 0; i <= playedTilesIterator; i ++) {
+    		x = playedTiles[i].getX();
+    		y = playedTiles[i].getY();
+    		board[x][y] = null;
+    		for(int index = 0; index < 7; index++) {
+    			if(myHand.getLetter(index) == null) {
+    				myHand.insert(myTiles[i], index);
+    				break;
+    			}
+    		}
+    	}
+    	
+    }
+    
+
     
     // Checks if a word will fit on the board
     public boolean fits(String word, int index1, int index2) {
