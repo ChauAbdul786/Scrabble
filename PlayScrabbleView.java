@@ -16,13 +16,32 @@ public class PlayScrabbleView {
         //frame.getContentPane().add(BorderLayout.SOUTH, handLabel);
 
         JLabel scoreLabel = new JLabel("SCORES GO HERE");
-        scoreLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-        frame.getContentPane().add(BorderLayout.EAST, scoreLabel);
+        scoreLabel.setFont(new Font("Serif", Font.PLAIN, 48));
 
-        DrawPanel centerDp = new DrawPanel("Images\\Boards\\Boardver1.PNG");
-        frame.getContentPane().add(BorderLayout.CENTER, centerDp);
+        JPanel scoreContainer = new JPanel();
+        scoreContainer.setLayout(new GridBagLayout());
+        scoreContainer.add(scoreLabel);
+
+        frame.getContentPane().add(BorderLayout.NORTH, scoreContainer);
+
+        //DrawPanel centerDp = new DrawPanel("Images\\Boards\\Boardver1.PNG");
+        //frame.getContentPane().add(BorderLayout.CENTER, centerDp);
+
+        JPanel buttonPanel = new JPanel();
+        JPanel container = new JPanel();
+
+        JButton gridSpace;
+        buttonPanel.setLayout(new GridLayout(15, 15));
+        for(int i = 0; i < 15 * 15; i++){
+                gridSpace = new JButton("");
+                gridSpace.setPreferredSize(new Dimension(50, 50));
+                buttonPanel.add(gridSpace);
+        }
+
+        container.add(buttonPanel);
+        frame.getContentPane().add(BorderLayout.CENTER, container);
         
-        frame.setSize(750, 750);
+        frame.setSize(1000, 1000);
         frame.setVisible(true);
     }
 
