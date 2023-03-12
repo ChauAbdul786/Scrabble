@@ -11,7 +11,7 @@ public class Letter {
       if (!((Character.isAlphabetic(letter) && Character.isUpperCase(letter)) || letter == '-')) {
         throw new IllegalArgumentException("Invalid letter: " + letter);
       }
-      if (points <= 0) {
+      if (points < 0) {
         throw new IllegalArgumentException("Invalid points: " + points);
       }
       this.letter = letter;
