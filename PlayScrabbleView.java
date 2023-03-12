@@ -8,8 +8,16 @@ public class PlayScrabbleView {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        DrawPanel northDp = new DrawPanel("Images\\Logos\\scrabblelogo1900.png");
-        frame.getContentPane().add(BorderLayout.NORTH, northDp);
+        //DrawPanel northDp = new DrawPanel("Images\\Logos\\scrabblelogo1900.png");
+        //frame.getContentPane().add(BorderLayout.CENTER, northDp);
+
+        JLabel handLabel = new JLabel("HAND GOES HERE");
+        handLabel.setFont(new Font("Serif", Font.PLAIN, 48));
+        frame.getContentPane().add(BorderLayout.SOUTH, handLabel);
+
+        JLabel scoreLabel = new JLabel("SCORES GO HERE");
+        scoreLabel.setFont(new Font("Serif", Font.PLAIN, 48));
+        frame.getContentPane().add(BorderLayout.EAST, scoreLabel);
 
         DrawPanel centerDp = new DrawPanel("Images\\Boards\\Boardver1.PNG");
         frame.getContentPane().add(BorderLayout.CENTER, centerDp);
