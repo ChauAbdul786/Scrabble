@@ -1,6 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-
 /**
  * Tests the Board class.
  */
@@ -29,7 +28,7 @@ public class BoardTest {
     @Test
     public void testConstructor() {
         Board b = new Board(multipliers);
-
+        //ensures that the multipliers were correctly assigned to the board
         assertEquals(1, b.getPointMult(0, 0));
         assertEquals(2, b.getPointMult(1, 1));
         assertEquals(1, b.getPointMult(2, 2));
@@ -51,6 +50,15 @@ public class BoardTest {
                 assertNull(b.getLetter(i, j));
             }
         }
+        //makes sure that the Dictionary.txt is opened
+        //and that the dictionary attribute is properly populated
+        for(int i = 0; i < 26;i++){
+            for(int j = 0; j < b.Dictionary[i].size();j++){
+            assertNotNull(b.Dictionary[i].get(j));
+            }
+        }
+
+        
     }
 
     // tests if multiplier array is correctly copied into the Board's pointMult
@@ -119,6 +127,7 @@ public class BoardTest {
     public void testGetBoardScore() {
         Board b = new Board(multipliers);
 
+        assertEquals(0, b.getBoardScore());;
         Letter letterQ = new Letter('Q', 10);
         assertTrue(b.play(letterQ, 3, 1));
         Letter letterS = new Letter('S', 1);
@@ -139,15 +148,39 @@ public class BoardTest {
 
         Letter letter1 = new Letter('Q', 10);
         assertTrue(b.play(letter1, 3, 1));
+        assertEquals(3, b.getPlayedTilesX(0));
+        assertEquals(1, b.getPlayedTilesY(0));
+        assertEquals(0, b.playedTilesIterator);
+
         Letter letter2 = new Letter('S', 1);
         assertTrue(b.play(letter2, 5, 6));
+        assertEquals(5, b.getPlayedTilesX(1));
+        assertEquals(6, b.getPlayedTilesY(1));
 
+        assertEquals(1,b.playedTilesIterator);
         assertEquals(letter1, b.getLetter(3, 1));
         assertEquals(letter2, b.getLetter(5, 6));
 
         Letter letter3 = new Letter('A', 3);
         assertFalse(b.play(letter3, 5, 6));
+        assertEquals(-1,b.playedTilesIterator);
+       // assertNull(b.getPlayedTilesX(0));
         assertEquals(letter2, b.getLetter(5, 6));
+    }
+
+    @Test
+    public void testPlayLetter2(){
+        Board b = new Board(multipliers);
+        Letter letter1 = new Letter('Q', 10);
+        assertTrue(b.play(letter1, 3, 1));
+        assertTrue(b.play(letter1, 3, 2));
+        assertTrue(b.play(letter1, 3, 3));
+        assertEquals(3, b.getPlayedTilesX(0));        
+        assertEquals(3, b.getPlayedTilesX(1));        
+        assertEquals(3, b.getPlayedTilesX(2));        
+        assertEquals(1, b.getPlayedTilesY(0));        
+        assertEquals(2, b.getPlayedTilesY(1));        
+        assertEquals(3, b.getPlayedTilesY(2));        
     }
 
     // tests playing letters at illegal indexes
@@ -159,15 +192,19 @@ public class BoardTest {
 
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, -1, 2);
+            assertEquals(-1, b.playedTilesIterator);
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 1, 16);
+            assertEquals(-1, b.playedTilesIterator);
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 16, 2);
+            assertEquals(-1, b.playedTilesIterator);
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 4, -2);
+            assertEquals(-1, b.playedTilesIterator);
         });
 
     }
@@ -263,5 +300,77 @@ public class BoardTest {
         });
 
     }
+
+    //Word Tests for game logic
+    @Test
+    public void BasicWordCheck(){
+        Board b = new Board(multipliers);
+        Letter letterB = new Letter('B',3);
+        Letter letterA = new Letter('A',1);
+        Letter letterG = new Letter('G',2);
+        assertTrue(b.play(letterB,3,4));
+        assertTrue(b.play(letterA,3,5));
+        assertTrue(b.play(letterG,3,6));
+        //assertEquals(-1,b.getFormedWordsIterator());
+        assertTrue(b.checkWords());
+    }
+
+    @Test
+    /*
+      B     A      G 
+      A            O
+      T     O      T    A   L
+
+      Tests putting multiple words onto the board
+      Above is a visual of how it would look like
+      All letters placed must make valid words 
+     */
+    public void AddingOntoWordCheck(){
+        Board b = new Board(multipliers);
+        Letter letterB = new Letter('B',3);
+        Letter letterA = new Letter('A',1);
+        Letter letterG = new Letter('G',2);
+        Letter letterT = new Letter('T',1);
+        Letter letterO = new Letter('O',1);
+        Letter letterL = new Letter('L',1);
+        assertTrue(b.play(letterB,3,4));
+        assertTrue(b.play(letterA,3,5));
+        assertTrue(b.play(letterG,3,6));
+        assertTrue(b.checkWords());
+
+        assertTrue(b.play(letterA,4,4));
+        assertTrue(b.play(letterT,5,4));
+        assertTrue(b.checkWords());
+
+        assertTrue(b.play(letterO,5,5));
+        assertTrue(b.play(letterT,5,6));
+        assertTrue(b.play(letterA,5,7));
+        assertTrue(b.play(letterL,5,8));
+        assertTrue(b.checkWords());
+
+        assertTrue(b.play(letterO,4,6));
+        assertTrue(b.checkWords());
+
+        //tests to ensure point methods are working correctly
+        //with words connected to each other 
+        // 1, 2, 1, 3, 1, 1 ,1 ,5, 1, 1, 1, 3, 1 ,2, 1
+        assertEquals(17, b.getBoardScore());
+    }
+
+    //checking invalid words
+    //does not currently work
+    @Test
+    public void  FalseWord1(){
+        Board b = new Board(multipliers);
+        Letter letterB = new Letter('B',3);
+        //Letter letterA = new Letter('A',1);
+        //Letter letterG = new Letter('G',2);
+        assertTrue(b.play(letterB,3,4));
+        assertTrue(b.play(letterB,3,5));
+        assertTrue(b.play(letterB,3,6));
+        assertEquals(1, b.getFormedWordsIterator());
+        assertFalse(b.checkWords());
+    }
+
 
 }

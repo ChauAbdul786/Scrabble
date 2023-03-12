@@ -19,7 +19,7 @@ public class Board {
     private int foundWordsIterator = -1;
     private String[] formedWords = new String[20];
     private int formedWordsIterator = -1;
-    private ArrayList<String>[] Dictionary;
+    public ArrayList<String>[] Dictionary;
 
     // initializes a 15 x 15 board and copies the multiplier array into the
     // pointMult variable
@@ -135,13 +135,13 @@ public class Board {
     	int row = myTile.getX();
     	int column = myTile.getY();
     	if(column-1 != -1) {
-    		if(board[row][column-1] != null && !inArray(row,column-1)){
+    		if(board[row][column-1] != null && !(inArray(row,column-1))){
     			tileDirection temp = new tileDirection(row,column-1, Direction.left);
     			checkWordsIterator++;
     			checkWords[checkWordsIterator] = temp;
     		}
     		else if(column + 1 !=15) {
-    			if(board[row][column+1] != null && !inArray(row,column+1)){
+    			if(board[row][column+1] != null && (!inArray(row,column+1))){
     				tileDirection temp = new tileDirection(row,column+1, Direction.right);
         			foundWordsIterator++;
         			foundWords[checkWordsIterator] = temp;
@@ -149,13 +149,13 @@ public class Board {
     		}
     	}
     	if(row-1 != -1) {
-    		if(board[row-1][column] != null && !inArray(row-1,column)){
-    			tileDirection temp = new tileDirection(row-1,column-1, Direction.up);
+    		if(board[row-1][column] != null && !(inArray(row-1,column))){
+    			tileDirection temp = new tileDirection(row-1,column, Direction.up);
     			checkWordsIterator++;
     			checkWords[checkWordsIterator] = temp;
     		}
     		else if(row + 1 !=15) {
-    			if(board[row+1][column] != null && !inArray(row+1,column)){
+    			if(board[row+1][column] != null && (!inArray(row+1,column))){
     				tileDirection temp = new tileDirection(row+1,column, Direction.down);
         			foundWordsIterator++;
         			foundWords[checkWordsIterator] = temp;
@@ -247,8 +247,8 @@ public class Board {
     				}
     			}
     		}
-    		formedWords[formedWordsIterator] = myString;
     		formedWordsIterator++;
+    		formedWords[formedWordsIterator] = myString;
     		myLetters--;
     	}
     	
@@ -256,9 +256,9 @@ public class Board {
     
     //Checks to see if all the formed words are valid.
     private boolean ValidateWords(){
-    	for(int i = 0; i < formedWordsIterator; i++) {
+    	for(int i = 1; i < formedWordsIterator+1; i++) {
     		boolean isFound = false;
-    		String myWord = formedWords[i];
+    		String myWord = formedWords[i-1];
     		int hashNum = (myWord.charAt(0)- 'A');
     		for(int j = 0; j <Dictionary[hashNum].size();j++) {
     			if(myWord == Dictionary[hashNum].get(j)) {
@@ -327,7 +327,38 @@ public class Board {
         return score;
     }
 
-    // Not sure that we need this
+    //Accessors for various private attributes
+    public int getPlayedTilesX(int i){
+        return playedTiles[i].getX();
+    }
+    public int getPlayedTilesY(int i){
+        return playedTiles[i].getY();
+    }
+
+    public tileDirection[] getCheckWords(){
+        return checkWords;
+    }
+
+    public tileDirection[] getFoundWords(){
+        return foundWords;
+    }
+
+    public int getCheckIterator(){
+        return checkWordsIterator;
+    }
+
+    public int getFoundIterator(){
+        return foundWordsIterator;
+    }
+
+    public String[] getFormedWords(){
+        return formedWords;
+    }
+    
+    public int getFormedWordsIterator(){
+        return formedWordsIterator;
+    }
+    //Converts the Board into a string
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
