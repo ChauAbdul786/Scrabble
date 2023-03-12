@@ -1,6 +1,6 @@
 public class Hand extends Letter{
     
-    static final int MAX_SIZE = 8;
+    private static int MAX_SIZE = 7;
     private Letter[] letters;
     private int currSize;
 
@@ -22,9 +22,9 @@ public class Hand extends Letter{
         if (size < 0) {
             size = 0;
         } else if (size > MAX_SIZE) {
-            size = MAX_SIZE;
+            MAX_SIZE = 7;
         }
-        this.currSize = size;
+        this.currSize = 0;
         this.letters = new Letter[size];
     }
 
@@ -47,7 +47,7 @@ public class Hand extends Letter{
     does not remove a letter.
     */
     public int indexOf(char letter){
-        for (int i = 0; i < currSize; i++){
+        for (int i = 0; i < MAX_SIZE; i++){
             if (letters[i] != null && letters[i].getLetter() == letter) {
                 return i;
             }
@@ -62,7 +62,7 @@ public class Hand extends Letter{
     false should be returned. 
     */
     public boolean insert(Letter letter, int index) {
-        if (index < 0 || index >= currSize) {
+        if (index < 0 || index > MAX_SIZE) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         if (letters[index] == null) {
@@ -84,7 +84,7 @@ public class Hand extends Letter{
     index. returns the removed letter.
     */
     public Letter remove(int index) {
-        if (index < 0 || index >= currSize) {
+        if (index < 0 || index > MAX_SIZE) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         Letter temp = letters[index];
