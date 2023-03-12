@@ -1,6 +1,8 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+
 import java.util.Scanner;
+
 
 import org.junit.jupiter.api.Test;
 /**
@@ -153,24 +155,30 @@ public class BoardTest {
         Scanner scanner = new Scanner(System.in);
 
         Letter letter1 = new Letter('Q', 10);
+
         assertTrue(b.play(letter1, 3, 1,scanner));
+
         assertEquals(3, b.getPlayedTilesX(0));
         assertEquals(1, b.getPlayedTilesY(0));
         assertEquals(0, b.getPlayedIterator());
+
 
         Letter letter2 = new Letter('S', 1);
         assertTrue(b.play(letter2, 5, 6,scanner));
         assertEquals(5, b.getPlayedTilesX(1));
         assertEquals(6, b.getPlayedTilesY(1));
 
+
         assertEquals(1,b.getPlayedIterator());
         assertEquals(letter1, b.getLetter(3, 1));
         assertEquals(letter2, b.getLetter(5, 6));
 
         Letter letter3 = new Letter('A', 3);
+
         assertFalse(b.play(letter3, 5, 6,scanner));
         b.resetIterators();
         assertEquals(-1,b.getPlayedIterator());
+
        // assertNull(b.getPlayedTilesX(0));
         assertEquals(letter2, b.getLetter(5, 6));
     }
@@ -179,10 +187,12 @@ public class BoardTest {
     public void testPlayLetter2(){
         Board b = new Board(multipliers);
         Letter letter1 = new Letter('Q', 10);
+
         Scanner scanner = new Scanner(System.in);
         assertTrue(b.play(letter1, 3, 1,scanner));
         assertTrue(b.play(letter1, 3, 2,scanner));
         assertTrue(b.play(letter1, 3, 3,scanner));
+
         assertEquals(3, b.getPlayedTilesX(0));        
         assertEquals(3, b.getPlayedTilesX(1));        
         assertEquals(3, b.getPlayedTilesX(2));        
@@ -200,6 +210,7 @@ public class BoardTest {
         Letter letter1 = new Letter('Q', 10);
 
         assertThrows(IndexOutOfBoundsException.class, () -> {
+
             b.play(letter1, -1, 2,scanner);
             assertEquals(-1, b.getPlayedIterator());
         });
@@ -214,6 +225,7 @@ public class BoardTest {
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 4, -2,scanner);
             assertEquals(-1, b.getPlayedIterator());
+
         });
 
     }
@@ -316,16 +328,20 @@ public class BoardTest {
     //Word Tests for game logic
     @Test
     public void BasicWordCheck(){
+
     	Hand myHand = new Hand();
     	Scanner scanner = new Scanner(System.in);
+
         Board b = new Board(multipliers);
         Letter letterB = new Letter('B',3);
         Letter letterA = new Letter('A',1);
         Letter letterG = new Letter('G',2);
+
         assertTrue(b.play(letterB,3,4,scanner));
         assertTrue(b.play(letterA,3,5,scanner));
         assertTrue(b.play(letterG,3,6,scanner));
         assertTrue(b.checkWords(myHand));
+
     }
 
     @Test
@@ -339,8 +355,10 @@ public class BoardTest {
       All letters placed must make valid words 
      */
     public void AddingOntoWordCheck(){
+
     	Hand myHand = new Hand();
     	Scanner scanner = new Scanner(System.in);
+
         Board b = new Board(multipliers);
         Letter letterB = new Letter('B',3);
         Letter letterA = new Letter('A',1);
@@ -348,6 +366,7 @@ public class BoardTest {
         Letter letterT = new Letter('T',1);
         Letter letterO = new Letter('O',1);
         Letter letterL = new Letter('L',1);
+
         assertTrue(b.play(letterB,3,4,scanner));
         assertTrue(b.play(letterA,3,5,scanner));
         assertTrue(b.play(letterG,3,6,scanner));
@@ -370,6 +389,7 @@ public class BoardTest {
         assertTrue(b.checkWords(myHand));
         b.resetIterators();
 
+
         //tests to ensure point methods are working correctly
         //with words connected to each other 
         // 1, 2, 1, 3, 1, 1 ,1 ,5, 1, 1, 1, 3, 1 ,2, 1
@@ -380,14 +400,17 @@ public class BoardTest {
     //does not currently work
     @Test
     public void  FalseWord1(){
+
     	Scanner scanner = new Scanner(System.in);
     	Hand myHand = new Hand();
         Board b = new Board(multipliers);
+
         Letter letterA = new Letter('A',3);
         Letter letterB = new Letter('B',3);
         Letter letterC = new Letter('C',3);
         //Letter letterA = new Letter('A',1);
         //Letter letterG = new Letter('G',2);
+
         assertTrue(b.play(letterA,3,4,scanner));
         assertTrue(b.play(letterB,3,5,scanner));
         assertTrue(b.play(letterC,3,6,scanner));
@@ -450,6 +473,7 @@ public class BoardTest {
         //with words connected to each other 
         // 1, 2, 1, 3, 1, 1 ,1 ,5, 1, 1, 1, 3, 1 ,2, 1
         assertEquals(17, b.getBoardScore());
+
     }
 
 

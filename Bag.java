@@ -7,7 +7,7 @@ public class Bag {
     //in one continuous stream in the list. 
     public Bag(){
         //'-' is used for blank tile 
-        int currLetterPoints = 0;
+        int currLetterPoints = 1;
         this.addLetters('-', currLetterPoints, 2);
 
         //1 point tiles 
@@ -45,7 +45,7 @@ public class Bag {
         
         //5 point tiles
         currLetterPoints = 5;
-        this.addLetters('K', currLetterPoints, 5);
+        this.addLetters('K', currLetterPoints, 1);
 
         //8 point tiles
         currLetterPoints = 8;
@@ -102,9 +102,9 @@ public class Bag {
         int result = 0;
         for(int i = 0; i < letters.size(); i++){
             if(letters.get(i).getLetter() == letter){
-                while(letters.get(i).getLetter() == letter){
-                    result++;
-                }
+//                 while(letters.get(i).getLetter() == letter){
+//                     result++;
+//                 }
                 return result;
             }
         }

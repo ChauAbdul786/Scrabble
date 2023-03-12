@@ -21,12 +21,16 @@ public class Board {
     private String[] formedWords = new String[20];
     private int formedWordsIterator = -1;
     public ArrayList<String>[] Dictionary;
+
     private intPairs[] triple = new intPairs[8];
     private intPairs[] doubles = new intPairs[17];
+
     private boolean horizontal;
     private boolean vertical;
     private int lowestTile;
     private int highestTile;
+
+
 
     // initializes a 15 x 15 board and copies the multiplier array into the
     // pointMult variable
@@ -156,15 +160,20 @@ public class Board {
     
     // finds all the words that a turn has created.
     // checks if each of those words are valid
+
     public boolean checkWords(Hand myHand){
+
+
     	if(isLegal()) {
     		findAffected();
     		findWords();
     		if(ValidateWords()){
+
     			return true;
     		}
     	}
     	returnTiles(myHand);
+
     	resetIterators();
     	return false;
     }
@@ -240,10 +249,12 @@ public class Board {
     			}
     			else {
     				temp = new tileDirection(row,column, Direction.right);
+
         			foundWordsIterator++;
         			foundWords[foundWordsIterator] = temp;
     			}
     		}
+
     		// takes care of all rows except the top
     		if (row - 1 != -1) {
     			if(board[row-1][column] != null) {
@@ -285,6 +296,7 @@ public class Board {
     			}
     			else {
 					temp = new tileDirection(row,column, Direction.down);
+
         			foundWordsIterator++;
         			foundWords[foundWordsIterator] = temp;
 				}
@@ -423,9 +435,11 @@ public class Board {
     
     //Checks to see if all the formed words are valid.
     private boolean ValidateWords(){
+
     	for(int i = 0; i <= formedWordsIterator; i++) {
+
     		boolean isFound = false;
-    		String myWord = formedWords[i];
+    		String myWord = formedWords[i-1];
     		int hashNum = (myWord.charAt(0)- 'A');
     		for(int j = 0; j <Dictionary[hashNum].size();j++) {
     			if(myWord.equals(Dictionary[hashNum].get(j))) {
@@ -441,6 +455,7 @@ public class Board {
     	return true;
     }
     
+
     //calculates the score for the turn
     public int calculateScore() {
     	int score = 0;
@@ -530,12 +545,16 @@ public class Board {
     
     //resets all iterators
     public void resetIterators() {
+
+
+
     	playedTilesIterator = -1;
     	checkWordsIterator = -1;
     	foundWordsIterator = -1;
 		formedWordsIterator = -1;
     }
     
+
     public void returnTiles(Hand myHand) {
     	int x,y;
     	for(int i = 0; i <= playedTilesIterator; i ++) {
@@ -552,6 +571,7 @@ public class Board {
     	
     }
     
+
     
     // Checks if a word will fit on the board
     public boolean fits(String word, int index1, int index2) {
@@ -625,6 +645,7 @@ public class Board {
     public int getPlayedIterator(){
         return playedTilesIterator;
     }
+
 
     public int getCheckIterator(){
         return checkWordsIterator;
