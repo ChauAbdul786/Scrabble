@@ -41,6 +41,8 @@ public class PlayScrabble {
         Scanner scanner = new Scanner(System.in);
 
         Board board = new Board(MULTIPLIERS);
+        BoardView boardgui = new BoardView();
+        boardgui.startBoardGUI(frame, board);
 
         Hand hand = new Hand(HAND_SIZE);
         buildHand(hand);

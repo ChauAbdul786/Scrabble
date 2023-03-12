@@ -26,20 +26,6 @@ public class PlayScrabbleView {
 
         //DrawPanel centerDp = new DrawPanel("Images\\Boards\\Boardver1.PNG");
         //frame.getContentPane().add(BorderLayout.CENTER, centerDp);
-
-        JPanel buttonPanel = new JPanel();
-        JPanel container = new JPanel();
-
-        JButton gridSpace;
-        buttonPanel.setLayout(new GridLayout(15, 15));
-        for(int i = 0; i < 15 * 15; i++){
-                gridSpace = new JButton("");
-                gridSpace.setPreferredSize(new Dimension(50, 50));
-                buttonPanel.add(gridSpace);
-        }
-
-        container.add(buttonPanel);
-        frame.getContentPane().add(BorderLayout.CENTER, container);
         
         frame.setSize(1000, 1000);
         frame.setVisible(true);
