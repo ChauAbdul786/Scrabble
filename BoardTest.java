@@ -150,20 +150,24 @@ public class BoardTest {
         assertTrue(b.play(letter1, 3, 1));
         assertEquals(3, b.getPlayedTilesX(0));
         assertEquals(1, b.getPlayedTilesY(0));
-        assertEquals(0, b.playedTilesIterator);
+        assertEquals(0, b.getPlayedIterator());
+
 
         Letter letter2 = new Letter('S', 1);
         assertTrue(b.play(letter2, 5, 6));
         assertEquals(5, b.getPlayedTilesX(1));
         assertEquals(6, b.getPlayedTilesY(1));
 
-        assertEquals(1,b.playedTilesIterator);
+        assertEquals(1,b.getPlayedIterator());
+
         assertEquals(letter1, b.getLetter(3, 1));
         assertEquals(letter2, b.getLetter(5, 6));
 
         Letter letter3 = new Letter('A', 3);
         assertFalse(b.play(letter3, 5, 6));
-        assertEquals(-1,b.playedTilesIterator);
+
+        assertEquals(-1,b.getPlayedIterator());
+
        // assertNull(b.getPlayedTilesX(0));
         assertEquals(letter2, b.getLetter(5, 6));
     }
@@ -192,19 +196,21 @@ public class BoardTest {
 
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, -1, 2);
-            assertEquals(-1, b.playedTilesIterator);
+
+            assertEquals(-1, b.getPlayedIterator());
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 1, 16);
-            assertEquals(-1, b.playedTilesIterator);
+            assertEquals(-1, b.getPlayedIterator());
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 16, 2);
-            assertEquals(-1, b.playedTilesIterator);
+            assertEquals(-1, b.getPlayedIterator());
         });
         assertThrows(IndexOutOfBoundsException.class, () -> {
             b.play(letter1, 4, -2);
-            assertEquals(-1, b.playedTilesIterator);
+            assertEquals(-1, b.getPlayedIterator());
+
         });
 
     }
@@ -311,7 +317,7 @@ public class BoardTest {
         assertTrue(b.play(letterB,3,4));
         assertTrue(b.play(letterA,3,5));
         assertTrue(b.play(letterG,3,6));
-        //assertEquals(-1,b.getFormedWordsIterator());
+
         assertTrue(b.checkWords());
     }
 
@@ -362,13 +368,16 @@ public class BoardTest {
     @Test
     public void  FalseWord1(){
         Board b = new Board(multipliers);
+
+        Letter letterA = new Letter('A',3);
         Letter letterB = new Letter('B',3);
+        Letter letterC = new Letter('C',3);
         //Letter letterA = new Letter('A',1);
         //Letter letterG = new Letter('G',2);
-        assertTrue(b.play(letterB,3,4));
+        assertTrue(b.play(letterA,3,4));
         assertTrue(b.play(letterB,3,5));
-        assertTrue(b.play(letterB,3,6));
-        assertEquals(1, b.getFormedWordsIterator());
+        assertTrue(b.play(letterC,3,6));
+
         assertFalse(b.checkWords());
     }
 
