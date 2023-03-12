@@ -1,6 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.*;
 
 /**
  * Simple Scrabble, a console-based word game.
@@ -34,7 +35,8 @@ public class PlayScrabble {
         System.out.println();
 
         PlayScrabbleView gui = new PlayScrabbleView();
-        gui.startGUI();
+        JFrame frame = new JFrame();
+        gui.startGUI(frame);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -42,6 +44,8 @@ public class PlayScrabble {
 
         Hand hand = new Hand(HAND_SIZE);
         buildHand(hand);
+        HandView handgui = new HandView();
+        handgui.startHandGUI(frame, hand);
 
         boolean done = false;
 
