@@ -42,7 +42,7 @@ public class PlayScrabble {
 
         Board board = new Board(MULTIPLIERS);
         BoardView boardgui = new BoardView();
-        boardgui.startBoardGUI(frame, board);
+        boardgui.startBoardGUI(frame, board, MULTIPLIERS);
 
         Hand hand = new Hand(HAND_SIZE);
         buildHand(hand);
