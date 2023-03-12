@@ -25,6 +25,7 @@ public class Board {
     private int lowestTile;
     private int highestTile;
 
+
     // initializes a 15 x 15 board and copies the multiplier array into the
     // pointMult variable
     public Board(int[][] multiplier) {
@@ -189,10 +190,12 @@ public class Board {
     			}
     			else {
     				temp = new tileDirection(row,column, Direction.right);
+
         			foundWordsIterator++;
         			foundWords[foundWordsIterator] = temp;
     			}
     		}
+
     		// takes care of all rows except the top
     		if (row - 1 != -1) {
     			if(board[row-1][column] != null) {
@@ -234,6 +237,7 @@ public class Board {
     			}
     			else {
 					temp = new tileDirection(row,column, Direction.down);
+
         			foundWordsIterator++;
         			foundWords[foundWordsIterator] = temp;
 				}
@@ -372,9 +376,11 @@ public class Board {
     
     //Checks to see if all the formed words are valid.
     private boolean ValidateWords(){
+
     	for(int i = 0; i <= formedWordsIterator; i++) {
+
     		boolean isFound = false;
-    		String myWord = formedWords[i];
+    		String myWord = formedWords[i-1];
     		int hashNum = (myWord.charAt(0)- 'A');
     		for(int j = 0; j <Dictionary[hashNum].size();j++) {
     			if(myWord.equals(Dictionary[hashNum].get(j))) {
@@ -471,6 +477,7 @@ public class Board {
     public int getPlayedIterator(){
         return playedTilesIterator;
     }
+
 
     public int getCheckIterator(){
         return checkWordsIterator;
