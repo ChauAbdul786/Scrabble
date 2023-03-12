@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class HandView {
+public class HandView implements ActionListener{
     JFrame frame;
     Hand hand;
 
@@ -19,6 +19,7 @@ public class HandView {
 
         for(int i = 0; i < h.getSize(); i++){
             JButton button = new JButton(String.valueOf(hand.getLetter(i).getLetter()));
+            button.addActionListener(this);
             button.setFont(new Font("Serif", Font.PLAIN, 24));
             handPanel.add(button);
         }
@@ -31,6 +32,15 @@ public class HandView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e){
+        JButton button = (JButton)e.getSource();
+        if(button.getFont().isBold()){
+            button.setFont(new Font("Serif", Font.PLAIN, 24));
+        }else{
+            button.setFont(new Font("Serif", Font.BOLD, 24));
+        }
     }
 
     public class DrawPanel extends JPanel{
