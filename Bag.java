@@ -45,7 +45,7 @@ public class Bag {
         
         //5 point tiles
         currLetterPoints = 5;
-        this.addLetters('K', currLetterPoints, 5);
+        this.addLetters('K', currLetterPoints, 1);
 
         //8 point tiles
         currLetterPoints = 8;
