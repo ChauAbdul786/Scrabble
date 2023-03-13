@@ -21,7 +21,7 @@ public class Hand extends Letter{
     public Hand(int size){
         if (size < 0) {
             size = 0;
-        } else if (size > MAX_SIZE) {
+        } else {
             MAX_SIZE = size;
         }
         this.currSize = 0;
@@ -67,6 +67,7 @@ public class Hand extends Letter{
         }
         if (letters[index] == null) {
             letters[index] = letter;
+            currSize++;
             return true;
         }
         return false;
