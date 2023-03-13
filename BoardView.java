@@ -18,6 +18,11 @@ public class BoardView {
                 gridSpace = new JButton("");
                 gridSpace.setPreferredSize(new Dimension(50, 50));
 
+                if(i == 7 && j == 7){
+                    gridSpace.setText(".");
+                    gridSpace.setFont(new Font("Serif", Font.BOLD, 28));
+                }
+
                 if(m[i][j] != 1){
                     gridSpace.setText("x" + String.valueOf(m[i][j]));
                     gridSpace.setFont(new Font("#GungSeo", Font.ITALIC, 10));
