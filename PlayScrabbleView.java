@@ -16,14 +16,14 @@ public class PlayScrabbleView {
         //handLabel.setFont(new Font("Serif", Font.PLAIN, 48));
         //frame.getContentPane().add(BorderLayout.SOUTH, handLabel);
 
-        JLabel scoreLabel = new JLabel("SCORES GO HERE");
-        scoreLabel.setFont(new Font("Serif", Font.PLAIN, 48));
+        //JLabel scoreLabel = new JLabel("SCORES GO HERE");
+        //scoreLabel.setFont(new Font("Serif", Font.PLAIN, 48));
 
-        JPanel scoreContainer = new JPanel();
-        scoreContainer.setLayout(new GridBagLayout());
-        scoreContainer.add(scoreLabel);
+        //JPanel scoreContainer = new JPanel();
+        //scoreContainer.setLayout(new GridBagLayout());
+        //scoreContainer.add(scoreLabel);
 
-        frame.getContentPane().add(BorderLayout.NORTH, scoreContainer);
+        //frame.getContentPane().add(BorderLayout.NORTH, scoreContainer);
 
         //DrawPanel centerDp = new DrawPanel("Images\\Boards\\Boardver1.PNG");
         //frame.getContentPane().add(BorderLayout.CENTER, centerDp);
