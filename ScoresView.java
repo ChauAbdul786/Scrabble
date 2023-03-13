@@ -21,7 +21,8 @@ public class ScoresView implements ActionListener{
         for(int i = 0; i < players; i++){
             scoreValues[i] = 0;
             label = new JLabel("Player " + String.valueOf(i + 1) + " : " + 0);
-            label.setFont(new Font("Serif", Font.BOLD, 20));
+            label.setFont(new Font("Serif", Font.PLAIN, 20));
+            scoreStrings[i] = label;
             labelContainer.add(label);
         }
 
@@ -34,6 +35,23 @@ public class ScoresView implements ActionListener{
 
         frame.setVisible(true);
 
+    }
+
+    public void boldPlayerName(int player){
+        switch(player){
+            case 1:
+                scoreStrings[1].setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+            case 2:
+                scoreStrings[1].setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+            case 3:
+                scoreStrings[1].setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+            case 4:
+                scoreStrings[1].setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+        }
     }
 
     public void actionPerformed(ActionEvent e){

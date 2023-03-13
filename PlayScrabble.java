@@ -88,11 +88,6 @@ public class PlayScrabble {
 
         ScoresView scoreGUI = new ScoresView();
         scoreGUI.startScoresGUI(frame, players);
-
-        Hand testHand = new Hand();
-        buildHand(testHand);
-        HandView testHandGUI = new HandView();
-        testHandGUI.startHandGUI(frame, testHand);
     }
 
     public static void terminalVersion(){
