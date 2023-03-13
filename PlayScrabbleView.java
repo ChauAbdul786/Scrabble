@@ -7,6 +7,7 @@ public class PlayScrabbleView {
     public void startGUI(JFrame f){
         frame = f;
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().removeAll();
         
         //DrawPanel northDp = new DrawPanel("Images\\Logos\\scrabblelogo1900.png");
         //frame.getContentPane().add(BorderLayout.CENTER, northDp);

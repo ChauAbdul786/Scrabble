@@ -27,6 +27,7 @@ public class PlayScrabble {
     { 1, 1, 1, 2, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1 } };
     public static final int HAND_SIZE = 7;
     private static Hand[] playerHands;
+    private static HandView[] playerHandGUIs;
     private static Bag bag;
     private static Board board;
     private static int[] Score;
@@ -38,12 +39,57 @@ public class PlayScrabble {
      * @param args command-line arguments (ignored)
      */
     public static void main(String[] args) {
-    	System.out.println("*** Welcome To Simple Scrabble ***");
-        System.out.println();
+        //terminalVersion();
+        guiVersion();
+    }
 
-        PlayScrabbleView gui = new PlayScrabbleView();
+    public static void guiVersion(){
+        /*PlayScrabbleView gui = new PlayScrabbleView();
         JFrame frame = new JFrame();
         gui.startGUI(frame);
+
+        board = new Board(MULTIPLIERS);
+        BoardView boardgui = new BoardView();
+        boardgui.startBoardGUI(frame, board, MULTIPLIERS);
+
+        bag = new Bag();
+
+        Hand hand = new Hand(HAND_SIZE);
+        buildHand(hand);
+        HandView handgui = new HandView();
+        handgui.startHandGUI(frame, hand);*/
+        JFrame frame = new JFrame();
+
+        MainMenuView mainMenuGUI = new MainMenuView();
+        mainMenuGUI.startMainMenuGUI(frame);
+        int players = -1;
+        while(players == -1){
+            try{
+                players = mainMenuGUI.getPlayerSelection();
+                Thread.sleep(200);
+            }catch (InterruptedException e){
+            }
+        }
+
+        PlayScrabbleView gui = new PlayScrabbleView();
+        gui.startGUI(frame);
+
+        playerHands = new Hand[players];
+        playerHandGUIs = new HandView[players];
+        Score = new int[players];
+        skippedTurn = 0;
+
+        board = new Board(MULTIPLIERS);
+        bag = new Bag();
+
+        board = new Board(MULTIPLIERS);
+        BoardView boardgui = new BoardView();
+        boardgui.startBoardGUI(frame, board, MULTIPLIERS);
+    }
+
+    public static void terminalVersion(){
+        System.out.println("*** Welcome To Simple Scrabble ***");
+        System.out.println();
 
         Scanner scanner = new Scanner(System.in);
         
