@@ -271,7 +271,7 @@ public class PlayScrabble {
     	}
     	
     		for(int k = 0; k <= iterator;k++) {
-    			// add letters to the bag
+    			bag.addLetter(toSwap[k]);
     		}
     	
     	if(choice == 8) {
