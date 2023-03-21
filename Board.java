@@ -439,7 +439,7 @@ public class Board {
     	for(int i = 0; i <= formedWordsIterator; i++) {
 
     		boolean isFound = false;
-    		String myWord = formedWords[i-1];
+    		String myWord = formedWords[i];
     		int hashNum = (myWord.charAt(0)- 'A');
     		for(int j = 0; j <Dictionary[hashNum].size();j++) {
     			if(myWord.equals(Dictionary[hashNum].get(j))) {

@@ -7,7 +7,7 @@ public class Bag {
     //in one continuous stream in the list. 
     public Bag(){
         //'-' is used for blank tile 
-        int currLetterPoints = 1;
+        int currLetterPoints = 0;
         this.addLetters('-', currLetterPoints, 2);
 
         //1 point tiles 

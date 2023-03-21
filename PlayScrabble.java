@@ -37,6 +37,7 @@ public class PlayScrabble {
      * @param args command-line arguments (ignored)
      */
     public static void main(String[] args) {
+    	
     	System.out.println("*** Welcome To Simple Scrabble ***");
         System.out.println();
 
@@ -103,6 +104,9 @@ public class PlayScrabble {
         	turn++;
         	if(turn == players) {turn = 0;}
             
+        }
+        for(int l = 0; l < players; l++) {
+        	System.out.printf("Player %d score: %d \n",l+1,Score[l]);
         }
         
     }
@@ -218,7 +222,7 @@ public class PlayScrabble {
     				return true;
     			}
     			else {
-    				System.out.println("illegal move!");
+    				//System.out.println("illegal move!");
     				board.returnTiles(playerHands[turn]);
         			return false;
     			}
@@ -296,8 +300,15 @@ public class PlayScrabble {
     }
     // displays the board
     private static void displayBoard() {
+    	for(int j = 0; j < 15; j++) {
+    		System.out.printf("%d ",j);
+    	}
+    	System.out.print("\n");
     	for (int i = 0; i < 15; i ++) {
     		for(int k = 0; k <15; k++) {
+    			if(k >=10) {
+    				System.out.print(" ");
+    			}
     			if(board.getLetter(i,k) == null){
     				System.out.print("- ");
     			}
@@ -306,6 +317,7 @@ public class PlayScrabble {
     				System.out.print(" ");
     			}
     		}
+    		System.out.printf("%d ",i);
 			System.out.print("\n");
     	}
     	System.out.print("\n");
